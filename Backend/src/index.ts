@@ -4,9 +4,11 @@ import http from "http";
 import {Server as SocketIO} from "socket.io";
 import cookieParser from 'cookie-parser';
 import router from "./router/index.routes";
+import { testConnection } from './lib/db';
 
 
 const app = express();
+testConnection()
 const server =http.createServer(app);
 const io = new SocketIO(server,{
     cors: {
