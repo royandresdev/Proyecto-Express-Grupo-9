@@ -10,30 +10,22 @@ const socket_io_1 = require("socket.io");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const index_routes_1 = __importDefault(require("./router/index.routes"));
 const db_1 = require("./lib/db");
+const chat_socket_1 = require("../src/modules/chat/chat.socket");
 const app = (0, express_1.default)();
 (0, db_1.testConnection)();
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, {
     cors: {
-        origin: "*", // o especificá el front
+        origin: "*",
         methods: ["GET", "POST"]
     }
 });
-const PORT = 3030;
+(0, chat_socket_1.registrarChatSocket)(io);
+const PORT = 3000;
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
 app.use("/", index_routes_1.default);
-io.on("connection", (socket) => {
-    console.log("Cliente conectado:", socket.id);
-    socket.on("chatMessage", (msg) => {
-        console.log("Mensaje recibido:", msg);
-        io.emit("chatMessage", { from: socket.id, message: msg });
-    });
-    socket.on("disconnect", () => {
-        console.log("Cliente desconectado:", socket.id);
-    });
-});
 server.listen(PORT, () => {
     console.log(`Servidor corriendo correctamente en la url http://localhost:${PORT}`);
 });

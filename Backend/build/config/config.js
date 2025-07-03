@@ -15,4 +15,5 @@ const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_DATABASE = process.env.DB_DATABASE || 'railway';
 const DB_PORT = process.env.DB_PORT;
 const SECRET_CODE = process.env.SECRET_CODE;
-exports.default = { PORT, DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE, DB_PORT, SECRET_CODE };
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+exports.default = { PORT, DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE, DB_PORT, SECRET_CODE, GEMINI_API_KEY };
