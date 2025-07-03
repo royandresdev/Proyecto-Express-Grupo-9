@@ -5,8 +5,8 @@ import { Server as SocketIO } from 'socket.io';
 import cookieParser from 'cookie-parser';
 import router from "./routes/index.routes";
 import sequelize, { testConnection } from './lib/sequelize';
-import {registrarChatSocket} from "../src/modules/chat/chat.socket"
-
+import {registrarChatSocket} from "./modules/chat/chat.socket"
+import cors from 'cors';
 // Importa la configuración para acceder al PORT del .env
 import config from './config/config';
 import morgan from 'morgan';
@@ -20,7 +20,7 @@ testConnection();
 // Esto creará o actualizará la tabla `users` según el modelo `User`.
 // ¡PRECAUCIÓN! En producción, considera usar migraciones de Sequelize en lugar de `sync({ alter: true })`
 sequelize
-  .sync({ force: true })
+  .sync({ alter: true })
   .then(() => {
     console.log('Modelos sincronizados con la base de datos.');
   })
@@ -40,6 +40,10 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 app.use(morgan('dev'));
+app.use(cors({
+  origin: '*', // Permite cualquier origen (ajusta para producción)
+  methods: ['GET', 'POST'],
+}));
 app.use("/", router);
 
 

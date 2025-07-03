@@ -1,10 +1,11 @@
-import { Router } from 'express'; // Importa Router desde 'express'
-import { register, login } from '../controllers/authController'; // Importa tus controladores
+import { Router } from 'express';
+import { register, login } from '../controllers/authController';
 
-const router = Router(); // ¡IMPORTANTE! Crea una instancia de Router aquí
+const router = Router();
 
-// Define las rutas POST usando los controladores
+// @ts-ignore - Express types mismatch
 router.post('/register', register);
+// @ts-ignore - Express types mismatch
 router.post('/login', login);
 
-export default router; // ¡MUY IMPORTANTE! Exporta la instancia del router por defecto
+export default router;

@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 import { analizarTono, analizarDecision, analizarFeedbackConversacional  } from "./chatAnalitysisServices";
-import { UsuarioActivo, Dashboard} from "./types.js";
+import { UsuarioActivo, Dashboard} from "./types";
 
 const usuariosActivos = new Map<string, UsuarioActivo>();
 

@@ -43,7 +43,7 @@ const socket_io_1 = require("socket.io");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const index_routes_1 = __importDefault(require("./routes/index.routes"));
 const sequelize_1 = __importStar(require("./lib/sequelize"));
-const chat_socket_1 = require("../src/modules/chat/chat.socket");
+const chat_socket_1 = require("./modules/chat/chat.socket");
 // Importa la configuración para acceder al PORT del .env
 const config_1 = __importDefault(require("./config/config"));
 const morgan_1 = __importDefault(require("morgan"));
@@ -69,7 +69,6 @@ const io = new socket_io_1.Server(server, {
         methods: ['GET', 'POST'],
     },
 });
-(0, sequelize_1.testConnection)();
 (0, chat_socket_1.registrarChatSocket)(io);
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
