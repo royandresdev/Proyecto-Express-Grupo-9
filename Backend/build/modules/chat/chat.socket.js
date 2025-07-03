@@ -32,7 +32,7 @@ const registrarChatSocket = (io) => {
                 user.decisiones.push(decision);
                 dashboard.decisiones[decision]++;
             }
-            io.emit("chatMessage", { from: nombre, message });
+            socket.broadcast.emit("chatMessage", { from: nombre, message });
             io.emit("dashboardUpdate", {
                 totalMensajes: dashboard.totalMensajes,
                 tonosPorcentaje: Object.fromEntries(Object.entries(dashboard.tonos).map(([tono, cantidad]) => [

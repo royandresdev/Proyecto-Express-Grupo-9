@@ -35,7 +35,6 @@ const io = new SocketIO(server, {
     methods: ['GET', 'POST'],
   },
 });
-testConnection()
 registrarChatSocket(io)
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));

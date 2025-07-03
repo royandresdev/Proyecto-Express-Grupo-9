@@ -1,10 +1,15 @@
 export type Tono = "positivo" | "neutro" | "tenso";
 export type Decision = "resuelta" | "pendiente" | "ninguna";
 
+
+export interface Mensaje {
+  texto: string;
+  timestamp: number;
+}
 export interface UsuarioActivo {
   nombre: string;
-  mensajes: string[];
-  tonos: Tono[];
+  mensajes: Mensaje[];
+  tonos: Tono[]; 
   decisiones: Decision[];
 }
 
