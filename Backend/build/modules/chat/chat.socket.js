@@ -31,7 +31,16 @@ const registrarChatSocket = (io) => {
         });
         socket.on("chatMessage", async (data) => {
             const { user_id, nombre, message } = data;
-            const user = usuariosActivos.get(user_id);
+            let user = usuariosActivos.get(user_id);
+            if (!user) {
+                user = {
+                    nombre,
+                    mensajes: [],
+                    tonos: [],
+                    decisiones: [],
+                };
+                usuariosActivos.set(user_id, user);
+            }
             user.mensajes.push({ texto: message, timestamp: Date.now() });
             dashboard.totalMensajes++;
             const tono = await (0, chatAnalitysisServices_1.analizarTono)(message);

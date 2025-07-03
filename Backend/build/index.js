@@ -44,6 +44,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const index_routes_1 = __importDefault(require("./routes/index.routes"));
 const sequelize_1 = __importStar(require("./lib/sequelize"));
 const chat_socket_1 = require("./modules/chat/chat.socket");
+const cors_1 = __importDefault(require("cors"));
 // Importa la configuración para acceder al PORT del .env
 const config_1 = __importDefault(require("./config/config"));
 const morgan_1 = __importDefault(require("morgan"));
@@ -55,7 +56,7 @@ const PORT = config_1.default.PORT; // Usa el puerto de tu archivo de configurac
 // Esto creará o actualizará la tabla `users` según el modelo `User`.
 // ¡PRECAUCIÓN! En producción, considera usar migraciones de Sequelize en lugar de `sync({ alter: true })`
 sequelize_1.default
-    .sync({ force: true })
+    .sync({ alter: true })
     .then(() => {
     console.log('Modelos sincronizados con la base de datos.');
 })
@@ -74,6 +75,10 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
 app.use((0, morgan_1.default)('dev'));
+app.use((0, cors_1.default)({
+    origin: '*', // Permite cualquier origen (ajusta para producción)
+    methods: ['GET', 'POST'],
+}));
 app.use("/", index_routes_1.default);
 server.listen(PORT, () => {
     console.log(`Servidor corriendo correctamente en http://localhost:${PORT}`);

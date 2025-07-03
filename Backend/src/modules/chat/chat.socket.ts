@@ -44,7 +44,17 @@ export const registrarChatSocket = (io: Server) => {
     socket.on("chatMessage", async (data: { user_id: string; nombre: string; message: string }) => {
       const { user_id, nombre, message } = data;
       
-      const user = usuariosActivos.get(user_id)!;
+      let user = usuariosActivos.get(user_id);
+
+      if (!user) {
+  user = {
+    nombre,
+    mensajes: [],
+    tonos: [],
+    decisiones: [],
+  };
+  usuariosActivos.set(user_id, user);
+}
       user.mensajes.push({ texto: message, timestamp: Date.now() });
       dashboard.totalMensajes++;
 
