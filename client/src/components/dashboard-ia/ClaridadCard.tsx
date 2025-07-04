@@ -4,7 +4,8 @@ import { useDashboardStore } from "@/store/dashboard.store";
 import { RectangleVertical } from "lucide-react";
 
 export default function ClaridadCard() {
-  const claridadPorUsuario = useDashboardStore((state) => state.claridadPorUsuario) ?? [];
+  const claridadPorUsuario =
+    useDashboardStore((state) => state.claridadPorUsuario) ?? [];
 
   if (!Array.isArray(claridadPorUsuario)) {
     return null;
@@ -19,8 +20,8 @@ export default function ClaridadCard() {
       </CardHeader>
       <CardContent className="p-0">
         <ul className="space-y-2">
-          {claridadPorUsuario.map((user) => (
-            <li key={user.user_id} className="flex items-center gap-2">
+          {claridadPorUsuario.map((user, index) => (
+            <li key={index} className="flex items-center gap-2">
               <span className="w-16">{user.nombre}</span>
               <Progress
                 value={user.claridad}
