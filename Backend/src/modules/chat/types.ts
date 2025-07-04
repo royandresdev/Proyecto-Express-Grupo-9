@@ -11,7 +11,7 @@ export interface UsuarioActivo {
   mensajes: Mensaje[];
   tonos: Tono[]; 
   decisiones: Decision[];
-  claridad: ("alta" | "media" | "baja")[];
+  claridad: number[];
 }
 
 export interface Dashboard {
