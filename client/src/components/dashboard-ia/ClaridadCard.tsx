@@ -1,13 +1,11 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import type { ClaridadData } from "@/types/dashboard.types";
+import { useDashboardStore } from "@/store/dashboard.store";
 import { RectangleVertical } from "lucide-react";
 
-interface ClaridadCardProps {
-  data: ClaridadData[];
-}
+export default function ClaridadCard() {
+  const claridadPorUsuario = useDashboardStore((state) => state.claridadPorUsuario);
 
-export default function ClaridadCard({ data }: ClaridadCardProps) {
   return (
     <Card className="w-full max-w-md p-4 gap-4">
       <CardHeader className="gap-0 p-0">
@@ -16,16 +14,16 @@ export default function ClaridadCard({ data }: ClaridadCardProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
-        <ul className="">
-          {data.map((user) => (
-            <li key={user.nombre} className="flex items-center gap-2">
+        <ul className="space-y-2">
+          {claridadPorUsuario.map((user) => (
+            <li key={user.user_id} className="flex items-center gap-2">
               <span className="w-16">{user.nombre}</span>
               <Progress
-                value={user.porcentaje}
-                indicatorColor={user.color}
+                value={user.claridad}
+                indicatorColor="bg-blue-500"
                 className="flex-1 h-2"
               />
-              <span className="w-8 text-right">{user.porcentaje}%</span>
+              <span className="w-8 text-right">{user.claridad}%</span>
             </li>
           ))}
         </ul>
