@@ -4,7 +4,11 @@ import { useDashboardStore } from "@/store/dashboard.store";
 import { RectangleVertical } from "lucide-react";
 
 export default function ClaridadCard() {
-  const claridadPorUsuario = useDashboardStore((state) => state.claridadPorUsuario);
+  const claridadPorUsuario = useDashboardStore((state) => state.claridadPorUsuario) ?? [];
+
+  if (!Array.isArray(claridadPorUsuario)) {
+    return null;
+  }
 
   return (
     <Card className="w-full max-w-md p-4 gap-4">
@@ -26,6 +30,11 @@ export default function ClaridadCard() {
               <span className="w-8 text-right">{user.claridad}%</span>
             </li>
           ))}
+          {claridadPorUsuario.length === 0 && (
+            <li className="text-center text-gray-500">
+              No hay datos de claridad disponibles
+            </li>
+          )}
         </ul>
       </CardContent>
     </Card>

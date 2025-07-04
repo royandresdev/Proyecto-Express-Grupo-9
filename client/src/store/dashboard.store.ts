@@ -25,14 +25,18 @@ interface DashboardState {
   setDashboard: (data: Partial<DashboardState>) => void;
 }
 
+const initialState: Omit<DashboardState, 'setDashboard'> = {
+  totalMensajes: 0,
+  tonosPorcentaje: { positivo: 0, neutro: 0, tenso: 0 },
+  participacionPorUsuario: [],
+  decisionesCantidad: { resueltas: 0, pendientes: 0 },
+  claridadPorUsuario: [],
+  sugerenciaGeneral: null,
+};
+
 export const useDashboardStore = create<DashboardState>()(
   devtools((set) => ({
-    totalMensajes: 0,
-    tonosPorcentaje: { positivo: 0, neutro: 0, tenso: 0 },
-    participacionPorUsuario: [],
-    decisionesCantidad: { resueltas: 0, pendientes: 0 },
-    claridadPorUsuario: [],
-    sugerenciaGeneral: null,
+    ...initialState,
     setDashboard: (data) => set((state) => ({ ...state, ...data }), false, 'setDashboard'),
   }), {
     name: 'dashboard-storage',
