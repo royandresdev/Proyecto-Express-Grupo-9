@@ -29,7 +29,7 @@ console.log(import.meta.env.VITE_API_URL)
           <DashboardHeader />
           <ParticipacionCard />
           <EmocionalCard />
-          <ClaridadCard data={data?.claridad || []} />
+          <ClaridadCard />
           <DecicionesCard data={data?.decisiones || { resueltas: 0, pendientes: 0 }} />
           <SugerenciasIaCard />
           <Button onClick={() => {
