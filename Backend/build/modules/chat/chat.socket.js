@@ -21,6 +21,7 @@ const registrarChatSocket = (io) => {
                     mensajes: [],
                     tonos: [],
                     decisiones: [],
+                    claridad: [],
                 });
                 socketIdToUserId.set(socket.id, user_id);
                 io.emit("chatMessage", {
@@ -38,6 +39,7 @@ const registrarChatSocket = (io) => {
                     mensajes: [],
                     tonos: [],
                     decisiones: [],
+                    claridad: [],
                 };
                 usuariosActivos.set(user_id, user);
             }
@@ -45,7 +47,9 @@ const registrarChatSocket = (io) => {
             dashboard.totalMensajes++;
             const tono = await (0, chatAnalitysisServices_1.analizarTono)(message);
             const decision = await (0, chatAnalitysisServices_1.analizarDecision)(message);
+            const claridad = await (0, chatAnalitysisServices_1.analizarClaridad)(message);
             user.tonos.push(tono);
+            user.claridad.push(claridad);
             dashboard.tonos[tono]++;
             if (decision !== "ninguna") {
                 user.decisiones.push(decision);
@@ -79,10 +83,32 @@ const registrarChatSocket = (io) => {
                     return {
                         user_id,
                         nombre: user.nombre,
-                        porcentaje
+                        porcentaje,
                     };
                 }),
-                sugerenciaGeneral
+                decisionesCantidad: {
+                    resueltas: dashboard.decisiones.resuelta,
+                    pendientes: dashboard.decisiones.pendiente,
+                },
+                claridadPorUsuario: [...usuariosActivos.entries()].map(([user_id, user]) => {
+                    const total = user.claridad.length;
+                    const porcentajes = { alta: 0, media: 0, baja: 0 };
+                    user.claridad.forEach((nivel) => {
+                        porcentajes[nivel]++;
+                    });
+                    Object.keys(porcentajes).forEach((clave) => {
+                        const claveTyped = clave;
+                        porcentajes[claveTyped] = total > 0
+                            ? Math.round((porcentajes[claveTyped] / total) * 100)
+                            : 0;
+                    });
+                    return {
+                        user_id,
+                        nombre: user.nombre,
+                        claridad: porcentajes,
+                    };
+                }),
+                sugerenciaGeneral,
             });
         });
         socket.on("disconnect", () => {
