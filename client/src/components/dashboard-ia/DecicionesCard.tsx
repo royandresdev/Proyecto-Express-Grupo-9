@@ -1,11 +1,10 @@
 import { CheckCircle, Clock, RectangleVertical } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
-import { type DecisionesData } from "@/types/dashboard.types";
+import { useDashboardStore } from "@/store/dashboard.store";
 
-interface DecicionesCardProps {
-  data: DecisionesData;
-}
-export default function DecicionesCard({ data }: DecicionesCardProps) {
+
+export default function DecicionesCard() {
+  const decisionesCantidad = useDashboardStore((state) => state.decisionesCantidad);
   return (
     <Card className="w-full max-w-md p-4 gap-4">
       <CardHeader className="gap-0 p-0">
@@ -16,14 +15,14 @@ export default function DecicionesCard({ data }: DecicionesCardProps) {
       <CardContent className="p-0">
         <div className="flex justify-between">
           <div className="text-center ">
-            <div className="text-2xl font-bold text-teal-600 mb-1">{data.resueltas}</div>
+            <div className="text-2xl font-bold text-teal-600 mb-1">{decisionesCantidad.resueltas}</div>
             <div className="text-xs text-gray-500 flex items-center justify-center gap-1">
               <CheckCircle className="w-3 h-3" />
               Resueltas
             </div>
           </div>
           <div className="text-center ">
-            <div className="text-2xl font-bold text-orange-600 mb-1">{data.pendientes}</div>
+            <div className="text-2xl font-bold text-orange-600 mb-1">{decisionesCantidad.pendientes}</div>
             <div className="text-xs text-gray-500 flex items-center justify-center gap-1">
               <Clock className="w-3 h-3" />
               Pendientes
