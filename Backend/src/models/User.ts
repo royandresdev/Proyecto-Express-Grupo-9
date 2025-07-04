@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize'; // ¡Asegúrate de importar 'Model' también!
+import { DataTypes, Model } from 'sequelize';
 import sequelize from '../lib/sequelize';
 
 // Define una interfaz para las propiedades que tu modelo 'User' tendrá
@@ -6,7 +6,7 @@ import sequelize from '../lib/sequelize';
 export interface UserAttributes {
   id?: number;
   username: string;
-  password: string; // Aquí se almacenará el hash de la contraseña
+  password: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -30,31 +30,17 @@ User.init(
       primaryKey: true,
     },
     username: {
-      type: new DataTypes.STRING(255),
-      unique: true,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    createdAt: {
-      // Explicitamente definido para que el tipado funcione bien con readonly
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
-    updatedAt: {
-      // Explicitamente definido
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
+    }
   },
   {
     tableName: 'users',
     sequelize,
-    timestamps: true,
   }
 );
 
