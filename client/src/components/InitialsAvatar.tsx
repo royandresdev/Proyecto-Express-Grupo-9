@@ -28,7 +28,7 @@ const InitialsAvatar = ({
 
   return (
     <div
-      className={`flex items-center justify-center select-none rounded-md`}
+      className={`flex items-center justify-center select-none rounded-md mt-2`}
       style={{
         width: size,
         height: size,
