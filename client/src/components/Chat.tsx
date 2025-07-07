@@ -21,6 +21,15 @@ interface DashboardUpdate {
     nombre: string;
     porcentaje: number;
   }>;
+  decisionesCantidad: {
+    resueltas: number;
+    pendientes: number;
+  };
+  claridadPorUsuario: Array<{
+    user_id: number;
+    nombre: string;
+    claridad: number;
+  }>;
   sugerenciaGeneral: string | null;
 }
 
@@ -100,7 +109,7 @@ function Chat() {
         minute: "2-digit",
         hour12: false,
       });
-
+      console.log("data", data);
       setMessages((prev) => [
         ...prev,
         {

@@ -6,20 +6,14 @@ import ClaridadCard from './components/dashboard-ia/ClaridadCard'
 import DecicionesCard from './components/dashboard-ia/DecicionesCard'
 import SugerenciasIaCard from './components/dashboard-ia/SugerenciasIaCard'
 import DashboardHeader from './components/dashboard-ia/DashboardHeader'
-import { useQuery } from './hooks/useQuery'
-import { type DashboardData } from './types/dashboard.types'
-import { dashboardService } from './services/dashboard/dashboard.service'
 import Header from './components/Header'
 import { Button } from './components/ui/button'
 import { useAuthStore } from './store/auth.store'
 import { useNavigate } from 'react-router-dom'
 
 function App() {
-  // Solo usamos useQuery para claridad y decisiones
-  const { data } = useQuery<DashboardData>(dashboardService.getDashboardData);
   const logout = useAuthStore(state => state.logout)
   const navigate = useNavigate()
-console.log(import.meta.env.VITE_API_URL)
   return (
     <div className='flex flex-col h-screen'>
       <Header />
@@ -29,8 +23,8 @@ console.log(import.meta.env.VITE_API_URL)
           <DashboardHeader />
           <ParticipacionCard />
           <EmocionalCard />
-          <ClaridadCard data={data?.claridad || []} />
-          <DecicionesCard data={data?.decisiones || { resueltas: 0, pendientes: 0 }} />
+          <ClaridadCard />
+          <DecicionesCard  />
           <SugerenciasIaCard />
           <Button onClick={() => {
             logout()
