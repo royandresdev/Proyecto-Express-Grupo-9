@@ -7,13 +7,8 @@ import DecicionesCard from './components/dashboard-ia/DecicionesCard'
 import SugerenciasIaCard from './components/dashboard-ia/SugerenciasIaCard'
 import DashboardHeader from './components/dashboard-ia/DashboardHeader'
 import Header from './components/Header'
-import { Button } from './components/ui/button'
-import { useAuthStore } from './store/auth.store'
-import { useNavigate } from 'react-router-dom'
 
 function App() {
-  const logout = useAuthStore(state => state.logout)
-  const navigate = useNavigate()
   return (
     <div className='flex flex-col h-screen'>
       <Header />
@@ -24,12 +19,8 @@ function App() {
           <ParticipacionCard />
           <EmocionalCard />
           <ClaridadCard />
-          <DecicionesCard  />
+          <DecicionesCard />
           <SugerenciasIaCard />
-          <Button onClick={() => {
-            logout()
-            navigate('/login')
-          }}>Logout</Button>
         </div>
       </div>
     </div>

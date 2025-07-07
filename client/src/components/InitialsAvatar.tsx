@@ -22,13 +22,14 @@ const InitialsAvatar = ({
   fontSize = 14,
   fontWeight = '600',
   fontFamily = 'Inter, sans-serif',
+  className = '',
 }) => {
   const initials = getInitials(name);
   const backgroundColor = stringToColor(name);
 
   return (
     <div
-      className={`flex items-center justify-center select-none rounded-md mt-2`}
+      className={`flex items-center justify-center select-none ${className}`}
       style={{
         width: size,
         height: size,
