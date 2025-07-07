@@ -12,7 +12,7 @@ const Message: FC<MessageProps> = ({ name, msg, timeStamp, isSystem = false }) =
   return (
     <div className="flex gap-3">
       {!isSystem && (
-        <InitialsAvatar name={name} size={32} />
+        <InitialsAvatar name={name} size={32} className="rounded-md mt-2" />
       )}
       <div className={`flex flex-col ${isSystem ? 'items-center mx-auto' : ''}`}>
         <div className={`flex items-center gap-2 ${isSystem ? 'text-gray-500' : ''}`}>
