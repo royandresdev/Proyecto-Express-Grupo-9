@@ -30,25 +30,40 @@ export default function ParticipacionCard() {
       </CardHeader>
       <CardContent className="p-0">
         <div className="space-y-4">
-          {data.map((item, index) => (
-            <div key={index} className="space-y-1">
-              <div className="flex justify-between text-sm">
-                <span>{item.nombre}</span>
-                <span>{item.porcentaje}%</span>
-              </div>
-              <div className="h-2 rounded-full bg-gray-200">
-                <div
-                  className="h-full rounded-full"
-                  style={{
-                    width: `${item.porcentaje}%`,
-                    backgroundColor: item.color,
-                  }}
-                />
-              </div>
-            </div>
-          ))}
+          {
+            data.length > 0 ? (
+              data.map((item, index) => (
+                <ProgressBar key={index} item={item} />
+              ))
+            ) : (
+              <div className="text-center text-gray-500">No hay datos de participación disponibles</div>
+            )}
         </div>
       </CardContent>
     </Card>
   );
 }
+
+type ProgressBarProps = {
+  item: { nombre: string; porcentaje: number; color: string };
+};
+
+const ProgressBar: React.FC<ProgressBarProps> = ({ item }) => {
+  return (
+    <div className="space-y-1">
+      <div className="flex justify-between text-sm">
+        <span>{item.nombre}</span>
+        <span>{item.porcentaje}%</span>
+      </div>
+      <div className="h-2 rounded-full bg-gray-200">
+        <div
+          className="h-full rounded-full"
+          style={{
+            width: `${item.porcentaje}%`,
+            backgroundColor: item.color,
+          }}
+        />
+      </div>
+    </div>
+  );
+};

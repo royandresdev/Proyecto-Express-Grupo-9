@@ -19,19 +19,29 @@ export default function SugerenciasIaCard() {
       </CardHeader>
       <CardContent className="p-0">
         <div className="space-y-2">
-          {data.map((sugerencia, index) => (
-            <div
-              key={index}
-              className="p-3 rounded-lg"
-              style={{ backgroundColor: `${sugerencia.color}15` }}
-            >
-              <p className="text-sm" style={{ color: sugerencia.color }}>
-                {sugerencia.texto}
-              </p>
-            </div>
-          ))}
+          {
+            data.length > 0 ? (
+              data.map((sugerencia, index) => (
+                <SugerenciaItem key={index} sugerencia={sugerencia} />
+              ))
+            ) : (
+              <div className="text-center text-gray-500">No hay sugerencias disponibles</div>
+            )}
         </div>
       </CardContent>
     </Card>
   );
 }
+
+const SugerenciaItem: React.FC<{ sugerencia: { texto: string; color: string } }> = ({ sugerencia }) => {
+  return (
+    <div
+      className="p-3 rounded-lg"
+      style={{ backgroundColor: `${sugerencia.color}15` }}
+    >
+      <p className="text-sm" style={{ color: sugerencia.color }}>
+        {sugerencia.texto}
+      </p>
+    </div>
+  )
+};
