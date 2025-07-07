@@ -1,11 +1,12 @@
 import { createBrowserRouter } from "react-router-dom"
-import App from "@/App"
-import  LoginForm  from "@/components/auth/LoginForm"
+import LoginForm from "@/components/auth/LoginForm"
+import App from "@/App";
+import ProtectedRoute from "./ProtectedRoute";
 
 const router = createBrowserRouter([
     {
+        element: <ProtectedRoute><App /></ProtectedRoute>,
         path: "/",
-        element: <App />,
     },
     {
         path: "/login",

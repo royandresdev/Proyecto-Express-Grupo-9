@@ -14,6 +14,12 @@ function Header() {
   const logout = useAuthStore((state) => state.logout);
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+    localStorage.removeItem('auth-storage');
+  }
+
   return (
     <header className="px-4 pt-2 pb-4 flex justify-between border-b border-var(--border) items-center">
       <h1 className="text-[#6b6fd4] font-bold text-xl">ConverSAFe</h1>
@@ -35,10 +41,7 @@ function Header() {
             </div>
             <hr className="my-1" />
             <button
-              onClick={() => {
-                logout()
-                navigate('/login');
-              }}
+              onClick={handleLogout}
               className="w-full text-left px-2 py-2 hover:bg-gray-100 flex gap-2 items-center">
               <LogOut size={16} /> Cerrar sesión
             </button>
