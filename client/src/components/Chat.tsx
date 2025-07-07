@@ -4,6 +4,7 @@ import Message from "./Message";
 import { useAuthStore } from "@/store/auth.store";
 import { useDashboardStore } from "@/store/dashboard.store";
 import { Button } from "./ui/button";
+import MessageIA from "./MessageIA";
 
 // Definimos la URL del backend
 const SOCKET_URL = import.meta.env.VITE_API_URL;
@@ -193,15 +194,17 @@ function Chat() {
         </div>
       )}
 
-      <ul className="px-2 space-y-4 py-4 flex-1 overflow-y-auto">
+      <ul className="pl-2 pr-4 space-y-4 py-4 flex-1 overflow-y-auto">
         {messages.map((msg, index) => (
           <li key={index}>
-            <Message
-              name={msg.from}
-              msg={msg.text}
-              timeStamp={msg.timeStamp}
-              isSystem={msg.from === "Sistema" || msg.from === "Asistente IA"}
-            />
+            {
+              msg.from === "Asistente IA" ? <MessageIA msg={msg.text} timeStamp={msg.timeStamp} /> :
+                <Message
+                  name={msg.from}
+                  msg={msg.text}
+                  timeStamp={msg.timeStamp}
+                  isSystem={msg.from === "Sistema" || msg.from === "Asistente IA"}
+                />}
           </li>
         ))}
         <div ref={messagesEndRef} />
