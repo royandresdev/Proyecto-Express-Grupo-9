@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
-import { RectangleVertical } from "lucide-react";
+import { Hand } from "lucide-react";
 import { useDashboardStore } from "@/store/dashboard.store";
 
 // Colores predefinidos para participación
@@ -25,7 +25,7 @@ export default function ParticipacionCard() {
     <Card className="w-full max-w-md p-4 gap-4">
       <CardHeader className="gap-0 p-0">
         <CardTitle className="text-base flex items-center justify-between">
-          Participación <RectangleVertical className="w-4 h-4" />
+          Participación <Hand size={16} />
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">

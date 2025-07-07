@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
-import { RectangleVertical } from "lucide-react";
+import { Bot } from "lucide-react";
 import { useDashboardStore } from "@/store/dashboard.store";
 
 export default function SugerenciasIaCard() {
@@ -14,7 +14,7 @@ export default function SugerenciasIaCard() {
     <Card className="w-full max-w-md p-4 gap-4">
       <CardHeader className="gap-0 p-0">
         <CardTitle className="text-base flex items-center justify-between">
-          Sugerencias IA <RectangleVertical className="w-4 h-4" />
+          Sugerencias IA <Bot size={16} />
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">

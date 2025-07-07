@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useDashboardStore } from "@/store/dashboard.store";
-import { RectangleVertical } from "lucide-react";
+import { Sun } from "lucide-react";
 
 export default function ClaridadCard() {
   const claridadPorUsuario =
@@ -15,7 +15,7 @@ export default function ClaridadCard() {
     <Card className="w-full max-w-md p-4 gap-4">
       <CardHeader className="gap-0 p-0">
         <CardTitle className="text-base flex items-center justify-between">
-          Claridad <RectangleVertical className="w-4 h-4" />
+          Claridad <Sun size={16} />
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
