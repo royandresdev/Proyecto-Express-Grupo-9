@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
-import { RectangleVertical } from "lucide-react";
+import { Bot } from "lucide-react";
 import { useDashboardStore } from "@/store/dashboard.store";
 
 export default function SugerenciasIaCard() {
@@ -14,24 +14,34 @@ export default function SugerenciasIaCard() {
     <Card className="w-full max-w-md p-4 gap-4">
       <CardHeader className="gap-0 p-0">
         <CardTitle className="text-base flex items-center justify-between">
-          Sugerencias IA <RectangleVertical className="w-4 h-4" />
+          Sugerencias IA <Bot size={16} />
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
         <div className="space-y-2">
-          {data.map((sugerencia, index) => (
-            <div
-              key={index}
-              className="p-3 rounded-lg"
-              style={{ backgroundColor: `${sugerencia.color}15` }}
-            >
-              <p className="text-sm" style={{ color: sugerencia.color }}>
-                {sugerencia.texto}
-              </p>
-            </div>
-          ))}
+          {
+            data.length > 0 ? (
+              data.map((sugerencia, index) => (
+                <SugerenciaItem key={index} sugerencia={sugerencia} />
+              ))
+            ) : (
+              <div className="text-center text-gray-500">No hay sugerencias disponibles</div>
+            )}
         </div>
       </CardContent>
     </Card>
   );
 }
+
+const SugerenciaItem: React.FC<{ sugerencia: { texto: string; color: string } }> = ({ sugerencia }) => {
+  return (
+    <div
+      className="p-3 rounded-lg"
+      style={{ backgroundColor: `${sugerencia.color}15` }}
+    >
+      <p className="text-sm" style={{ color: sugerencia.color }}>
+        {sugerencia.texto}
+      </p>
+    </div>
+  )
+};

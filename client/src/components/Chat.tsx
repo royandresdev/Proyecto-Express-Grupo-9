@@ -5,6 +5,7 @@ import { useAuthStore } from "@/store/auth.store";
 import { useDashboardStore } from "@/store/dashboard.store";
 import { Button } from "./ui/button";
 import MessageIA from "./MessageIA";
+import { SendHorizontal } from "lucide-react";
 
 // Definimos la URL del backend
 const SOCKET_URL = import.meta.env.VITE_API_URL;
@@ -211,11 +212,11 @@ function Chat() {
       </ul>
 
       <form
-        className="flex items-center gap-2 px-2 pt-4 pb-2 border-t border-[#a8a8a8]"
+        className="flex items-center gap-2 px-2 pt-4 pb-2 border-t"
         onSubmit={handleSubmit}
       >
         <input
-          className="px-4 py-2 border rounded w-full outline-[#a8a8a8] border-[#a8a8a8]"
+          className="px-4 py-2 border rounded w-full border"
           type="text"
           title="Escribe tu mensaje..."
           placeholder="Escribe tu mensaje..."
@@ -227,7 +228,7 @@ function Chat() {
           type="submit"
           disabled={!isConnected || isSending || !message.trim()}
         >
-          {isSending ? "Enviando..." : "Enviar"}
+          {isSending ? "Enviando..." : <span className="flex items-center gap-2"><SendHorizontal /> Enviar</span>}
         </Button>
       </form>
     </section>

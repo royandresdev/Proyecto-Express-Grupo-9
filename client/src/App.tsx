@@ -14,7 +14,7 @@ function App() {
       <Header />
       <div className='flex flex-1 overflow-hidden'>
         <Chat />
-        <div className='overflow-y-scroll'>
+        <div className='overflow-y-auto border-l'>
           <DashboardHeader />
           <ParticipacionCard />
           <EmocionalCard />

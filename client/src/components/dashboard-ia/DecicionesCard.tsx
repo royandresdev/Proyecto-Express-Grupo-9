@@ -1,4 +1,4 @@
-import { CheckCircle, Clock, RectangleVertical } from "lucide-react";
+import { CheckCircle, Clock, Handshake } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { useDashboardStore } from "@/store/dashboard.store";
 
@@ -9,7 +9,7 @@ export default function DecicionesCard() {
     <Card className="w-full max-w-md p-4 gap-4">
       <CardHeader className="gap-0 p-0">
         <CardTitle className="text-base flex items-center justify-between">
-          Decisiones <RectangleVertical className="w-4 h-4" />
+          Decisiones <Handshake size={16} />
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
