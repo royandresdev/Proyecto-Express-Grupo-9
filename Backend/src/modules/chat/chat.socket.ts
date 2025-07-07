@@ -119,23 +119,24 @@ export const registrarChatSocket = (io: Server) => {
         },
         claridadPorUsuario: [...usuariosActivos.entries()].map(([user_id, user]) => {
           const total = user.claridad.length;
-          const porcentajes = { alta: 0, media: 0, baja: 0 };
+          // Si no hay mensajes, devolvemos 0 como claridad
+          if (total === 0) {
+            return {
+              user_id,
+              nombre: user.nombre,
+              claridad: 0
+            };
+          }
 
-          user.claridad.forEach((nivel) => {
-            porcentajes[nivel]++;
-          });
-
-          Object.keys(porcentajes).forEach((clave) => {
-            const claveTyped = clave as keyof typeof porcentajes;
-            porcentajes[claveTyped] = total > 0
-              ? Math.round((porcentajes[claveTyped] / total) * 100)
-              : 0;
-          });
+          // Calculamos el promedio de claridad
+          const promedioClaridad = Math.round(
+            user.claridad.reduce((sum, valor) => sum + valor, 0) / total
+          );
 
           return {
             user_id,
             nombre: user.nombre,
-            claridad: porcentajes,
+            claridad: promedioClaridad
           };
         }),
         sugerenciaGeneral,

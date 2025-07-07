@@ -17,10 +17,9 @@ const PORT = config.PORT; // Usa el puerto de tu archivo de configuración
 testConnection();
 
 // Sincroniza los modelos con la base de datos.
-// Esto creará o actualizará la tabla `users` según el modelo `User`.
-// ¡PRECAUCIÓN! En producción, considera usar migraciones de Sequelize en lugar de `sync({ alter: true })`
+// Usamos sync() simple para evitar modificaciones peligrosas
 sequelize
-  .sync({ alter: true })
+  .sync()
   .then(() => {
     console.log('Modelos sincronizados con la base de datos.');
   })

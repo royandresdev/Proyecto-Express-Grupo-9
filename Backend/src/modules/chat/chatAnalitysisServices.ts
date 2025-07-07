@@ -93,31 +93,32 @@ Sugerencia:
   return texto;
 };
 
-export const analizarClaridad = async (mensaje: string): Promise<"alta" | "media" | "baja"> => {
+export const analizarClaridad = async (mensaje: string): Promise<number> => {
   const prompt = `
-Analizá el siguiente mensaje y respondé únicamente con uno de estos niveles de claridad:
-- alta: es claro, directo y fácil de entender.
-- media: se entiende con algunos esfuerzos, tiene ambigüedades o errores menores.
-- baja: es confuso, vago o desorganizado.
+Analiza el siguiente mensaje y devuelve ÚNICAMENTE un número del 0 al 100 que represente el porcentaje de claridad, donde:
+- 100%: mensaje perfectamente claro, directo y fácil de entender
+- 50%: mensaje con algunas ambigüedades pero entendible
+- 0%: mensaje muy confuso o incomprensible
 
 Mensaje: "${mensaje}"
 
-Respondé solo con: alta, media o baja.
+IMPORTANTE: Responde SOLO con el número (ejemplo: 75)
 `;
 
   const result = await generateContentWithRetry(prompt);
 
   if (!result || result.error || !result.response) {
     console.warn("⚠️ Error al analizar claridad:", result?.error || "Respuesta inválida");
-    return "media"; // valor neutral por defecto
+    return 50; // valor neutral por defecto
   }
 
-  const texto = result.response.text().trim().toLowerCase();
+  const texto = result.response.text().trim();
+  const numero = parseInt(texto);
 
-  if (["alta", "media", "baja"].includes(texto)) {
-    return texto as "alta" | "media" | "baja";
+  if (!isNaN(numero) && numero >= 0 && numero <= 100) {
+    return numero;
   }
 
-  return "media";
+  return 50; // valor neutral por defecto
 };
 
