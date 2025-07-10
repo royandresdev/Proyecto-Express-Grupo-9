@@ -115,14 +115,18 @@ Sugerencia:
   return texto;
 };
 
-export const analizarClaridad = async (mensaje: string): Promise<number> => {
+export const analizarClaridad = async (
+  mensajes: { nombre: string; texto: string }[]
+): Promise<number> => {
   const prompt = `
-Analiza el siguiente mensaje y devuelve ÚNICAMENTE un número del 0 al 100 que represente el porcentaje de claridad, donde:
-- 100%: mensaje perfectamente claro, directo y fácil de entender
-- 50%: mensaje con algunas ambigüedades pero entendible
-- 0%: mensaje muy confuso o incomprensible
+Analiza la siguiente conversación y devuelve ÚNICAMENTE un número del 0 al 100 que represente el porcentaje de claridad, donde:
+- 100%: conversación clara, directa y fácil de entender
+- 50%: conversación con algunas ambigüedades pero entendible
+- 0%: conversación muy confusa o incomprensible
 
-Mensaje: "${mensaje}"
+Conversación: ${mensajes
+    .map((m, i) => `${i + 1}. ${m.nombre}: ${m.texto}`)
+    .join("\n")}
 
 IMPORTANTE: Responde SOLO con el número (ejemplo: 75)
 `;

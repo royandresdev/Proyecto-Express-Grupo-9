@@ -185,10 +185,14 @@ export const registrarChatSocket = (io: Server) => {
     ); */
 
     socket.on("chatMessage", async (data: Message) => {
-      // Aquí se recibe el mensaje del cliente y se agrega al historial de conversación
-
       const receivedMessage = { ...data, timestamp: Date.now() };
       const toneMessage = await analizarTono(receivedMessage.message);
+      const clarityConversation = await analizarClaridad(
+        conversationHistory.messages.map((m) => ({
+          nombre: m.nombre,
+          texto: m.message,
+        }))
+      );
       receivedMessage.tone = toneMessage;
 
       conversationHistory.messages.push(receivedMessage);
@@ -292,8 +296,6 @@ export const registrarChatSocket = (io: Server) => {
         );
       }
 
-      calculateParticipationByUser();
-
       io.emit("dashboardUpdate", {
         totalMensajes: dashboard.totalMensajes,
         tonosPorcentaje: calculatePercentageTones(),
@@ -302,30 +304,7 @@ export const registrarChatSocket = (io: Server) => {
           resueltas: dashboard.decisiones.resuelta,
           pendientes: dashboard.decisiones.pendiente,
         },
-        claridadPorUsuario: [...usuariosActivos.entries()].map(
-          ([user_id, user]) => {
-            const total = user.claridad.length;
-            // Si no hay mensajes, devolvemos 0 como claridad
-            if (total === 0) {
-              return {
-                user_id,
-                nombre: user.nombre,
-                claridad: 0,
-              };
-            }
-
-            // Calculamos el promedio de claridad
-            const promedioClaridad = Math.round(
-              user.claridad.reduce((sum, valor) => sum + valor, 0) / total
-            );
-
-            return {
-              user_id,
-              nombre: user.nombre,
-              claridad: promedioClaridad,
-            };
-          }
-        ),
+        clarityConversation,
         sugerenciaGeneral,
       });
     });
