@@ -1,5 +1,5 @@
-import { create } from 'zustand'
-import { devtools } from 'zustand/middleware'
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 interface DashboardState {
   totalMensajes: number;
   tonosPorcentaje: {
@@ -16,29 +16,29 @@ interface DashboardState {
     resueltas: number;
     pendientes: number;
   };
-  claridadPorUsuario: Array<{
-    user_id: number;
-    nombre: string;
-    claridad: number;
-  }>;
+  clarityConversation: number;
   sugerenciaGeneral: string | null;
   setDashboard: (data: Partial<DashboardState>) => void;
 }
 
-const initialState: Omit<DashboardState, 'setDashboard'> = {
+const initialState: Omit<DashboardState, "setDashboard"> = {
   totalMensajes: 0,
   tonosPorcentaje: { positivo: 0, neutro: 0, tenso: 0 },
   participacionPorUsuario: [],
   decisionesCantidad: { resueltas: 0, pendientes: 0 },
-  claridadPorUsuario: [],
+  clarityConversation: 0,
   sugerenciaGeneral: null,
 };
 
 export const useDashboardStore = create<DashboardState>()(
-  devtools((set) => ({
-    ...initialState,
-    setDashboard: (data) => set((state) => ({ ...state, ...data }), false, 'setDashboard'),
-  }), {
-    name: 'dashboard-storage',
-  })
+  devtools(
+    (set) => ({
+      ...initialState,
+      setDashboard: (data) =>
+        set((state) => ({ ...state, ...data }), false, "setDashboard"),
+    }),
+    {
+      name: "dashboard-storage",
+    }
+  )
 );
