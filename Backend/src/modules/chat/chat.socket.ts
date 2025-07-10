@@ -5,7 +5,7 @@ import {
   analizarFeedbackConversacional,
   analizarClaridad,
 } from "./chatAnalitysisServices";
-import { UsuarioActivo, Dashboard } from "./types";
+import { UsuarioActivo, Dashboard, UserMessageCount } from "./types";
 
 const usuariosActivos = new Map<string, UsuarioActivo>();
 
@@ -20,12 +20,15 @@ interface Message {
   nombre: string;
   message: string;
   timestamp: number;
+  tone?: "positivo" | "neutro" | "tenso";
 }
 interface Conversation {
+  generalTone: { positivo: number; neutro: number; tenso: number };
   messages: Message[];
 }
 
 const conversationHistory: Conversation = {
+  generalTone: { positivo: 0, neutro: 0, tenso: 0 },
   messages: [],
 };
 
@@ -181,90 +184,151 @@ export const registrarChatSocket = (io: Server) => {
       }
     ); */
 
-    socket.on(
-      "chatMessage",
-      async (data: { user_id: string; nombre: string; message: string }) => {
-        // Aquí se recibe el mensaje del cliente y se agrega al historial de conversación
-        conversationHistory.messages.push({ ...data, timestamp: Date.now() });
+    socket.on("chatMessage", async (data: Message) => {
+      // Aquí se recibe el mensaje del cliente y se agrega al historial de conversación
 
-        // Actualiza la cantidad de mensajes del dashboard con el nuevo mensaje
-        dashboard.totalMensajes = conversationHistory.messages.length;
+      const receivedMessage = { ...data, timestamp: Date.now() };
+      const toneMessage = await analizarTono(receivedMessage.message);
+      receivedMessage.tone = toneMessage;
 
-        // Analiza la conversación para obtener alguna sugerencia si es necesario
-        const sugerencia = await analizarFeedbackConversacional(
-          conversationHistory.messages.map((m) => ({
-            nombre: m.nombre,
-            texto: m.message,
-          }))
-        );
+      conversationHistory.messages.push(receivedMessage);
 
-        // Si hay una sugerencia la emitimos al cliente y la agregamos al historial de conversación
-        if (sugerencia) {
-          io.emit("chatMessage", {
-            from: "Asistente IA",
-            message: `🤖 ${sugerencia}`,
-          });
+      // Actualiza la cantidad de mensajes del dashboard con el nuevo mensaje
+      dashboard.totalMensajes = conversationHistory.messages.length;
 
-          conversationHistory.messages.push({
-            user_id: "ia",
-            nombre: "Asistente IA",
-            message: sugerencia,
-            timestamp: Date.now(),
-          });
-        }
+      // Analiza la conversación para obtener alguna sugerencia si es necesario
+      const sugerencia = await analizarFeedbackConversacional(
+        conversationHistory.messages.map((m) => ({
+          nombre: m.nombre,
+          texto: m.message,
+        }))
+      );
 
-        io.emit("dashboardUpdate", {
-          totalMensajes: dashboard.totalMensajes,
-          tonosPorcentaje: Object.fromEntries(
-            Object.entries(dashboard.tonos).map(([tono, cantidad]) => [
-              tono,
-              Math.round((cantidad / dashboard.totalMensajes) * 100) || 0,
-            ])
-          ),
-          participacionPorUsuario: [...usuariosActivos.entries()].map(
-            ([user_id, user]) => {
-              const porcentaje = Math.round(
-                (user.mensajes.length / dashboard.totalMensajes) * 100
-              );
-              return {
-                user_id,
-                nombre: user.nombre,
-                porcentaje,
-              };
-            }
-          ),
-          decisionesCantidad: {
-            resueltas: dashboard.decisiones.resuelta,
-            pendientes: dashboard.decisiones.pendiente,
-          },
-          claridadPorUsuario: [...usuariosActivos.entries()].map(
-            ([user_id, user]) => {
-              const total = user.claridad.length;
-              // Si no hay mensajes, devolvemos 0 como claridad
-              if (total === 0) {
-                return {
-                  user_id,
-                  nombre: user.nombre,
-                  claridad: 0,
-                };
-              }
+      // Si hay una sugerencia la emitimos al cliente y la agregamos al historial de conversación
+      if (sugerencia) {
+        io.emit("chatMessage", {
+          from: "Asistente IA",
+          message: `🤖 ${sugerencia}`,
+        });
 
-              // Calculamos el promedio de claridad
-              const promedioClaridad = Math.round(
-                user.claridad.reduce((sum, valor) => sum + valor, 0) / total
-              );
-
-              return {
-                user_id,
-                nombre: user.nombre,
-                claridad: promedioClaridad,
-              };
-            }
-          ),
-          sugerenciaGeneral,
+        conversationHistory.messages.push({
+          user_id: "ia",
+          nombre: "Asistente IA",
+          message: sugerencia,
+          timestamp: Date.now(),
         });
       }
-    );
+
+      const calculatePercentageTones = (): {
+        positivo: number;
+        neutro: number;
+        tenso: number;
+      } => {
+        const totalMessages = conversationHistory.messages.filter(
+          (m) => m.user_id !== "ia"
+        ).length;
+        if (totalMessages === 0) return { positivo: 0, neutro: 0, tenso: 0 };
+
+        return {
+          positivo: Math.round(
+            (conversationHistory.messages.filter((m) => m.tone === "positivo")
+              .length /
+              totalMessages) *
+              100
+          ),
+          neutro: Math.round(
+            (conversationHistory.messages.filter((m) => m.tone === "neutro")
+              .length /
+              totalMessages) *
+              100
+          ),
+          tenso: Math.round(
+            (conversationHistory.messages.filter((m) => m.tone === "tenso")
+              .length /
+              totalMessages) *
+              100
+          ),
+        };
+      };
+
+      function calculateParticipationByUser() {
+        // Calcula la cantidad de mensajes en la conversación
+        const totalMessages = conversationHistory.messages.filter(
+          (m) => m.user_id !== "ia"
+        ).length;
+
+        // Si no hay mensajes, devolvemos un array vacío
+        if (totalMessages === 0) return [];
+
+        // Calcula la cantidad de mensajes por usuario
+        const countMessagesPerUser = conversationHistory.messages.reduce(
+          (acc: UserMessageCount, message: Message) => {
+            if (message.user_id === "ia") return acc; // Ignora mensajes de IA
+
+            if (!acc[message.nombre]) {
+              acc[message.nombre] = 1;
+            } else {
+              acc[message.nombre]++;
+            }
+
+            return acc;
+          },
+          {} as UserMessageCount
+        );
+
+        // Mapea los resultados a un array de objetos con user_id, nombre y porcentaje
+        return Object.entries(countMessagesPerUser).map(
+          ([nombre, count]: [string, number]) => {
+            const user_id =
+              conversationHistory.messages.find((m) => m.nombre === nombre)
+                ?.user_id || "desconocido";
+
+            return {
+              user_id,
+              nombre,
+              porcentaje: Math.round((count / totalMessages) * 100),
+            };
+          }
+        );
+      }
+
+      calculateParticipationByUser();
+
+      io.emit("dashboardUpdate", {
+        totalMensajes: dashboard.totalMensajes,
+        tonosPorcentaje: calculatePercentageTones(),
+        participacionPorUsuario: calculateParticipationByUser(),
+        decisionesCantidad: {
+          resueltas: dashboard.decisiones.resuelta,
+          pendientes: dashboard.decisiones.pendiente,
+        },
+        claridadPorUsuario: [...usuariosActivos.entries()].map(
+          ([user_id, user]) => {
+            const total = user.claridad.length;
+            // Si no hay mensajes, devolvemos 0 como claridad
+            if (total === 0) {
+              return {
+                user_id,
+                nombre: user.nombre,
+                claridad: 0,
+              };
+            }
+
+            // Calculamos el promedio de claridad
+            const promedioClaridad = Math.round(
+              user.claridad.reduce((sum, valor) => sum + valor, 0) / total
+            );
+
+            return {
+              user_id,
+              nombre: user.nombre,
+              claridad: promedioClaridad,
+            };
+          }
+        ),
+        sugerenciaGeneral,
+      });
+    });
 
     socket.on("disconnect", () => {
       const user_id = socketIdToUserId.get(socket.id);
