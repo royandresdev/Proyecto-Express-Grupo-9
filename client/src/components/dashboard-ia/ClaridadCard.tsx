@@ -20,13 +20,23 @@ export default function ClaridadCard() {
       </CardHeader>
       <CardContent className="p-0">
         <ul className="space-y-2">
-          <li className="flex items-center gap-2">
-            <Progress
-              value={clarityConversation}
-              indicatorColor="bg-blue-500"
-              className="flex-1 h-2"
-            />
-            <span className="w-8 text-right">{clarityConversation}%</span>
+          <li>
+            <div className="flex items-center gap-2">
+              <Progress
+                value={clarityConversation}
+                indicatorColor="bg-blue-500"
+                className="flex-1 h-2"
+              />
+              <span className="w-8 text-right">{clarityConversation}%</span>
+            </div>
+            <div className="flex justify-between w-full">
+              <span className="text-sm text-gray-500">
+                Baja
+              </span>
+              <span className="text-sm text-gray-500">
+                Alta
+              </span>
+            </div>
           </li>
         </ul>
       </CardContent>
