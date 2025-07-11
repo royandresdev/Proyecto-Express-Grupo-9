@@ -3,7 +3,35 @@ import { generateContentWithRetry } from "../../lib/giminiClient";
 export const analizarTono = async (
   mensaje: string
 ): Promise<"positivo" | "neutro" | "tenso"> => {
-  const prompt = `Analizá este mensaje y respondé solo si corresponde con: positivo, neutro o tenso\n"${mensaje}"`;
+  const prompt = `
+    Eres un asistente inteligente que analiza el tono de los mensajes en un chat de equipo de desarrollo.
+    Ponte en el lugar del receptor del mensaje y evalúa su tono general.
+
+    El tono puede ser:
+    - Positivo: mensajes que transmiten ánimo, motivación o reconocimiento; elogios.
+    - Neutro: mensajes informativos, sin emociones fuertes ni conflictos; saludos; preguntas; comentarios generales.
+    - Tenso: mensajes que indican desacuerdos, frustraciones o conflictos; insultos.
+
+    Analiza el mensaje y responde solo si corresponde con: positivo, neutro o tenso
+    Mensaje: "${mensaje}"
+
+    Ejemplos:
+    1. Positivo: 
+    "Excelente trabajo, todos están haciendo un gran esfuerzo."
+    "Felicidades equipo, hemos superado el hito a tiempo."
+
+    2. Neutro:
+    "El proyecto avanza según lo planeado, sin problemas significativos."
+    "Estamos trabajando en las tareas asignadas y todo marcha bien."
+    "Hola, ¿cómo están todos? ¿Alguna novedad?"
+
+    3. Tenso:
+    "Hay desacuerdos sobre la dirección del proyecto y necesitamos resolverlos pronto."
+    "El equipo está frustrado por la falta de comunicación y claridad en las decisiones."
+    "Lo están haciendo mal, necesitamos mejorar la calidad del código."
+
+    Responde estrictamente solo con: positivo, neutro o tenso.
+    `;
 
   const result = await generateContentWithRetry(prompt);
 
