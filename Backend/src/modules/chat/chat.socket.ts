@@ -208,17 +208,21 @@ export const registrarChatSocket = (io: Server) => {
         }))
       );
 
+      const titleSuggestion = sugerencia?.split("\n")[0];
+      const descriptionSuggestion = sugerencia?.split("\n")[1];
+
+      console.log("Sugerencia:", sugerencia);
       // Si hay una sugerencia la emitimos al cliente y la agregamos al historial de conversación
       if (sugerencia) {
         io.emit("chatMessage", {
           from: "Asistente IA",
-          message: `🤖 ${sugerencia}`,
+          message: `🤖 ${descriptionSuggestion}`,
         });
 
         conversationHistory.messages.push({
           user_id: "ia",
           nombre: "Asistente IA",
-          message: sugerencia,
+          message: descriptionSuggestion || sugerencia,
           timestamp: Date.now(),
         });
       }
@@ -305,7 +309,7 @@ export const registrarChatSocket = (io: Server) => {
           pendientes: dashboard.decisiones.pendiente,
         },
         clarityConversation,
-        sugerenciaGeneral,
+        sugerenciaGeneral: titleSuggestion,
       });
     });
 

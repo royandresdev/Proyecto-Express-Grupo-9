@@ -96,7 +96,13 @@ Importante, si se da uno de estos casos respondé con la palabra exacta: "ningun
 Conversación:
 ${mensajes.map((m, i) => `${i + 1}. ${m.nombre}: ${m.texto}`).join("\n")}
 
-Sugerencia:
+La sugerencia debe tener estrictamente el siguiente formato, sin agregar los corchetes o símbolos extra:
+Título breve y descriptivo de la sugerencia a seguir
+Descripción clara y concisa del problema o situación
+
+Ejemplo de respuesta:
+Falta de seguimiento en la tarea X
+El equipo no ha respondido a la solicitud de revisión del código desde hace 3 días, lo que está bloqueando el avance del proyecto.
 `.trim();
 
   const result = await generateContentWithRetry(prompt);
