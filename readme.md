@@ -1,5 +1,8 @@
 # ConverSAFe - Chat con IA para la gestión de proyectos
 
+<img width="1902" height="909" alt="image" src="https://github.com/user-attachments/assets/b230f388-db8a-4aaa-9e5f-b944075ac8d8" />
+
+
 ## 📖 Descripción
 
 Una aplicación web que consiste en un chat con IA para ayudar a los usuarios a gestionar sus proyectos de manera más eficiente.
@@ -124,10 +127,10 @@ src/
 **Santiago Usca**  
 🐈‍⬛ [GitHub](https://github.com/santiago-dev0x0)
 
-**Facundo Gomez**
+**Facundo Gomez**  
 🐈‍⬛ [GitHub](https://github.com/ffffacu)
 
-**Roly Ochoa**
+**Roly Ochoa**  
 🐈‍⬛ [GitHub](https://github.com/kachamozo)
 
 ---
