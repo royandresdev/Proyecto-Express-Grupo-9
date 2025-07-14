@@ -1,7 +1,6 @@
 import { Server } from "socket.io";
 import {
   analizarTono,
-  analizarDecision,
   analizarFeedbackConversacional,
   analizarClaridad,
 } from "./chatAnalitysisServices";
@@ -33,7 +32,6 @@ const conversationHistory: Conversation = {
 };
 
 const socketIdToUserId = new Map<string, string>();
-let sugerenciaGeneral: string | null = null;
 
 export const registrarChatSocket = (io: Server) => {
   io.on("connection", (socket) => {
