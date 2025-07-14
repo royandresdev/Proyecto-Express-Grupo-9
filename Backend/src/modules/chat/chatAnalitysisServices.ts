@@ -1,12 +1,45 @@
 import { generateContentWithRetry } from "../../lib/giminiClient";
 
-export const analizarTono = async (mensaje: string): Promise<"positivo" | "neutro" | "tenso"> => {
-  const prompt = `Analizá este mensaje y respondé solo si corresponde con: positivo, neutro o tenso\n"${mensaje}"`;
+export const analizarTono = async (
+  mensaje: string
+): Promise<"positivo" | "neutro" | "tenso"> => {
+  const prompt = `
+    Eres un asistente inteligente que analiza el tono de los mensajes en un chat de equipo de desarrollo.
+    Ponte en el lugar del receptor del mensaje y evalúa su tono general.
+
+    El tono puede ser:
+    - Positivo: mensajes que transmiten ánimo, motivación o reconocimiento; elogios.
+    - Neutro: mensajes informativos, sin emociones fuertes ni conflictos; saludos; preguntas; comentarios generales.
+    - Tenso: mensajes que indican desacuerdos, frustraciones o conflictos; insultos.
+
+    Analiza el mensaje y responde solo si corresponde con: positivo, neutro o tenso
+    Mensaje: "${mensaje}"
+
+    Ejemplos:
+    1. Positivo: 
+    "Excelente trabajo, todos están haciendo un gran esfuerzo."
+    "Felicidades equipo, hemos superado el hito a tiempo."
+
+    2. Neutro:
+    "El proyecto avanza según lo planeado, sin problemas significativos."
+    "Estamos trabajando en las tareas asignadas y todo marcha bien."
+    "Hola, ¿cómo están todos? ¿Alguna novedad?"
+
+    3. Tenso:
+    "Hay desacuerdos sobre la dirección del proyecto y necesitamos resolverlos pronto."
+    "El equipo está frustrado por la falta de comunicación y claridad en las decisiones."
+    "Lo están haciendo mal, necesitamos mejorar la calidad del código."
+
+    Responde estrictamente solo con: positivo, neutro o tenso.
+    `;
 
   const result = await generateContentWithRetry(prompt);
 
   if (!result || result.error || !result.response) {
-    console.warn("⚠️ Error al analizar tono:", result?.error || "Respuesta inválida");
+    console.warn(
+      "⚠️ Error al analizar tono:",
+      result?.error || "Respuesta inválida"
+    );
     return "neutro"; // valor por defecto
   }
 
@@ -18,7 +51,9 @@ export const analizarTono = async (mensaje: string): Promise<"positivo" | "neutr
   return "neutro";
 };
 
-export const analizarDecision = async (mensaje: string): Promise<"resuelta" | "pendiente" | "ninguna"> => {
+export const analizarDecision = async (
+  mensaje: string
+): Promise<"resuelta" | "pendiente" | "ninguna"> => {
   const prompt = `
 Tu tarea es analizar si el siguiente mensaje representa una decisión. 
 Debés responder solo con una de las siguientes opciones (sin explicaciones): 
@@ -39,12 +74,14 @@ Respondé solo con: resuelta, pendiente o ninguna.
   const result = await generateContentWithRetry(prompt);
 
   if (!result || result.error || !result.response) {
-    console.warn("⚠️ Error al analizar decisión:", result?.error || "Respuesta inválida");
-    return "ninguna"; 
+    console.warn(
+      "⚠️ Error al analizar decisión:",
+      result?.error || "Respuesta inválida"
+    );
+    return "ninguna";
   }
 
   const texto = result.response.text().trim().toLowerCase();
-
 
   if (["resuelta", "pendiente"].includes(texto)) {
     return texto as "resuelta" | "pendiente";
@@ -53,37 +90,58 @@ Respondé solo con: resuelta, pendiente o ninguna.
   return "ninguna";
 };
 
-
 export const analizarFeedbackConversacional = async (
   mensajes: { nombre: string; texto: string }[]
 ): Promise<string | null> => {
   const prompt = `
-Sos un asistente inteligente para mejorar la comunicación de un equipo de desarrollo.
+Sos un asistente inteligente para mejorar la comunicación de un equipo de desarrollo, no seas molesto al repetir las cosas si ya las mencionaste.
 
 Analizá esta conversación y respondé **solo si detectás un problema grave o relevante** para mejorar, como:
 - falta de respuesta o seguimiento importante,
-- mensajes poco claros que dificulten el avance,
+- mensajes poco claros en temas que indican ser críticos e importantes,
 - tono tenso o conflictivo evidente,
 - decisiones sin responsables claros que bloqueen el proyecto,
 - mensajes cruzados o confusión significativa,
 - falta de acuerdos o alineación que afecten el trabajo.
 
-Ignorá mensajes triviales, saludos, cortesías o comentarios neutrales sin impacto en la dinámica del equipo.
+Ignorá mensajes triviales, saludos, cortesías o comentarios neutrales sin impacto en la dinámica del equipo, evita ser repetitivo.
+
+Recuerda que eres un asistente y si el equipo no responde a tus sugerencias, no debes insistir. Tu objetivo es ayudar a mejorar la comunicación y la efectividad del equipo.
 
 Cuando respondas, sé breve, amable y constructivo, sugiriendo acciones claras para mejorar.
 
 Si no hay nada relevante, respondé únicamente con la palabra exacta: "ninguna".
 
+Importante, si se da uno de estos casos respondé con la palabra exacta: "ninguna":
+- Si el asistente IA ya respondió al problema anteriormente.
+- Si el mensaje ya fue analizado y no se detectó problema.
+- Si el mensaje es una simple pregunta o saludo sin relevancia.
+- Si el mensaje no aporta información nueva o relevante.
+- Si el equipo ya ha discutido el tema y no hay nuevas acciones a tomar.
+- Si el equipo realmente no necesita ayuda en este momento.
+- Si el equipo no se nota confundido o perdido en la conversación.
+- Si el mensaje no ha hecho que el equipo se sienta confundido.
+- Si el mensaje parece que va a continuar con otro mensaje y no es necesario responder aún.
+
 Conversación:
 ${mensajes.map((m, i) => `${i + 1}. ${m.nombre}: ${m.texto}`).join("\n")}
 
-Sugerencia:
+La sugerencia debe tener estrictamente el siguiente formato:
+"Título breve y descriptivo de la sugerencia a seguir", No respondas ambigüedades como "ninguna", "no hay sugerencias" o títulos vagos.
+"Descripción clara y concisa del problema o situación.", No respondas ambigüedades como "ninguna", "no hay sugerencias" o descripciones vagas.
+
+Ejemplo de respuesta:
+Falta de seguimiento en la tarea X
+El equipo no ha respondido a la solicitud de revisión del código desde hace 3 días, lo que está bloqueando el avance del proyecto.
 `.trim();
 
   const result = await generateContentWithRetry(prompt);
 
   if (!result || result.error || !result.response) {
-    console.warn("⚠️ Error al generar feedback conversacional:", result?.error || "Respuesta inválida");
+    console.warn(
+      "⚠️ Error al generar feedback conversacional:",
+      result?.error || "Respuesta inválida"
+    );
     return result?.error || null; // para mostrar mensaje de alerta en el chat si hay error
   }
 
@@ -93,14 +151,18 @@ Sugerencia:
   return texto;
 };
 
-export const analizarClaridad = async (mensaje: string): Promise<number> => {
+export const analizarClaridad = async (
+  mensajes: { nombre: string; texto: string }[]
+): Promise<number> => {
   const prompt = `
-Analiza el siguiente mensaje y devuelve ÚNICAMENTE un número del 0 al 100 que represente el porcentaje de claridad, donde:
-- 100%: mensaje perfectamente claro, directo y fácil de entender
-- 50%: mensaje con algunas ambigüedades pero entendible
-- 0%: mensaje muy confuso o incomprensible
+Analiza la siguiente conversación y devuelve ÚNICAMENTE un número del 0 al 100 que represente el porcentaje de claridad, donde:
+- 100%: conversación clara, directa y fácil de entender
+- 50%: conversación con algunas ambigüedades pero entendible
+- 0%: conversación muy confusa o incomprensible
 
-Mensaje: "${mensaje}"
+Conversación: ${mensajes
+    .map((m, i) => `${i + 1}. ${m.nombre}: ${m.texto}`)
+    .join("\n")}
 
 IMPORTANTE: Responde SOLO con el número (ejemplo: 75)
 `;
@@ -108,7 +170,10 @@ IMPORTANTE: Responde SOLO con el número (ejemplo: 75)
   const result = await generateContentWithRetry(prompt);
 
   if (!result || result.error || !result.response) {
-    console.warn("⚠️ Error al analizar claridad:", result?.error || "Respuesta inválida");
+    console.warn(
+      "⚠️ Error al analizar claridad:",
+      result?.error || "Respuesta inválida"
+    );
     return 50; // valor neutral por defecto
   }
 
@@ -121,4 +186,3 @@ IMPORTANTE: Responde SOLO con el número (ejemplo: 75)
 
   return 50; // valor neutral por defecto
 };
-
