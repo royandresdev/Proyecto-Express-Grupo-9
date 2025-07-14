@@ -120,13 +120,15 @@ Importante, si se da uno de estos casos respondé con la palabra exacta: "ningun
 - Si el equipo ya ha discutido el tema y no hay nuevas acciones a tomar.
 - Si el equipo realmente no necesita ayuda en este momento.
 - Si el equipo no se nota confundido o perdido en la conversación.
+- Si el mensaje no ha hecho que el equipo se sienta confundido.
+- Si el mensaje parece que va a continuar con otro mensaje y no es necesario responder aún.
 
 Conversación:
 ${mensajes.map((m, i) => `${i + 1}. ${m.nombre}: ${m.texto}`).join("\n")}
 
-La sugerencia debe tener estrictamente el siguiente formato, sin agregar los corchetes o símbolos extra:
-Título breve y descriptivo de la sugerencia a seguir
-Descripción clara y concisa del problema o situación
+La sugerencia debe tener estrictamente el siguiente formato:
+"Título breve y descriptivo de la sugerencia a seguir", No respondas ambigüedades como "ninguna", "no hay sugerencias" o títulos vagos.
+"Descripción clara y concisa del problema o situación.", No respondas ambigüedades como "ninguna", "no hay sugerencias" o descripciones vagas.
 
 Ejemplo de respuesta:
 Falta de seguimiento en la tarea X
