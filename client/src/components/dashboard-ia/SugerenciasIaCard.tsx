@@ -36,11 +36,10 @@ export default function SugerenciasIaCard() {
 const SugerenciaItem: React.FC<{ sugerencia: { texto: string; color: string } }> = ({ sugerencia }) => {
   return (
     <div
-      className="p-3 rounded-lg"
-      style={{ backgroundColor: `${sugerencia.color}15` }}
+      className="p-3 rounded-lg bg-amber-100"
     >
-      <p className="text-sm" style={{ color: sugerencia.color }}>
-        {sugerencia.texto}
+      <p className="text-sm text-black font-bold" >
+        ⚠️ {sugerencia.texto}
       </p>
     </div>
   )

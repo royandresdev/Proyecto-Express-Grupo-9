@@ -4,10 +4,10 @@ import { useDashboardStore } from "@/store/dashboard.store";
 import { Sun } from "lucide-react";
 
 export default function ClaridadCard() {
-  const claridadPorUsuario =
-    useDashboardStore((state) => state.claridadPorUsuario) ?? [];
+  const clarityConversation =
+    useDashboardStore((state) => state.clarityConversation);
 
-  if (!Array.isArray(claridadPorUsuario)) {
+  if (typeof clarityConversation !== "number") {
     return null;
   }
 
@@ -15,27 +15,29 @@ export default function ClaridadCard() {
     <Card className="w-full max-w-md p-4 gap-4">
       <CardHeader className="gap-0 p-0">
         <CardTitle className="text-base flex items-center justify-between">
-          Claridad <Sun size={16} />
+          Claridad de la conversación<Sun size={16} />
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
         <ul className="space-y-2">
-          {claridadPorUsuario.map((user, index) => (
-            <li key={index} className="flex items-center gap-2">
-              <span className="w-16">{user.nombre}</span>
+          <li>
+            <div className="flex items-center gap-2">
               <Progress
-                value={user.claridad}
+                value={clarityConversation}
                 indicatorColor="bg-blue-500"
                 className="flex-1 h-2"
               />
-              <span className="w-8 text-right">{user.claridad}%</span>
-            </li>
-          ))}
-          {claridadPorUsuario.length === 0 && (
-            <li className="text-center text-gray-500">
-              No hay datos de claridad disponibles
-            </li>
-          )}
+              <span className="w-8 text-right">{clarityConversation}%</span>
+            </div>
+            <div className="flex justify-between w-full">
+              <span className="text-sm text-gray-500">
+                Baja
+              </span>
+              <span className="text-sm text-gray-500">
+                Alta
+              </span>
+            </div>
+          </li>
         </ul>
       </CardContent>
     </Card>
